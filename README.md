@@ -2,7 +2,7 @@
 Django实现商城网站
 
 ##开发环境
-Python3.4 Django1.8.4 Mysql5.6
+Python3.4，Django1.8.4，Mysql5.6
 
 ##实现功能点
 1. 商品分类
