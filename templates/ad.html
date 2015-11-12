@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<div class="banner">
+    <div class="col-sm-3 banner-mat">
+        <img class="img-responsive"	src="{% static 'images/ba1.jpg' %}" alt="">
+    </div>
+    <div class="col-sm-6 matter-banner">
+        <div class="slider">
+            <div class="callbacks_container">
+                <ul class="rslides" id="slider">
+                    {% for ad in ad_list %}
+                    <li>
+                        <img src="{{ MEDIA_URL }}{{ ad.image_url }}" alt="">
+                     </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 banner-mat">
+        <img class="img-responsive" src="{% static 'images/ba.jpg' %}" alt="">
+    </div>
+    <div class="clearfix"> </div>
+    </div>

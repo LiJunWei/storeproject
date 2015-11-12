@@ -1,0 +1,15 @@
+<div id="pagination">
+    <ul id="pagination-flickr">
+    {% if clo_list.has_previous %}
+    <li class="previous"><a href="?page={{ clo_list.previous_page_number }}{% if request.GET.cid %}&cid={{ request.GET.cid }}{% endif %}{% if request.GET.tid %}&tid={{ request.GET.tid }}{% endif %}">&laquo;上一页</a></li>
+    {% else %}
+    <li class="previous-off">&laquo;上一页</li>
+    {% endif %}
+     <li class="active">{{ clo_list.number }}/{{ clo_list.paginator.num_pages }}</li>
+    {% if clo_list.has_next %}
+      <li class="next"><a href="?page={{ clo_list.next_page_number }}{% if request.GET.cid %}&cid={{ request.GET.cid }}{% endif %}{% if request.GET.tid %}&tid={{ request.GET.tid }}{% endif %}">下一页 &raquo;</a></li>
+    {% else %}
+      <li class="next-off">下一页 &raquo;</li>
+    {% endif %}
+   </ul>
+</div>
