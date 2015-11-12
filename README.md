@@ -22,7 +22,6 @@ Python3.4 Django1.8.4 Mysql5.6
 15. 后台Admin管理端
 
 ##用到的主要技术
-1. Django ORM常用查询，排序
-2. 分页
-3. Django session缓存购物车信息
-4. Html CSS JS Jquery Bootstrap
+1. Django ORM常用查询，排序，分页
+2. Django session缓存购物车信息
+3. Html CSS JS Jquery Bootstrap
