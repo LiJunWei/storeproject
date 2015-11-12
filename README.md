@@ -30,3 +30,12 @@ Python3.4 Django1.8.4 Mysql5.6
 
 ###商品列表
 ![](imgs/商品列表.png)
+
+###商品详情
+![](imgs/详情.png)
+
+###购物车
+![](imgs/购物车.png)
+
+###登录
+![](imgs/登录.png)
