@@ -127,3 +127,4 @@ ENV/
 
 *.log
 /migrations/
+*.sqlite3
