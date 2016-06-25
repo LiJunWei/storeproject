@@ -26,6 +26,8 @@ SECRET_KEY = 'j6tf=1zt00#9xr-3a4*7%qy)0wiqf1ib7*afrvc_^!#3k%2a3u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DB_DEBUG = True
+
 ALLOWED_HOSTS = []
 
 
@@ -78,16 +80,29 @@ WSGI_APPLICATION = 'storeproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'storedb',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '',
-        'PORT': '',
+if DB_DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': '',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+            'PORT': '',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'storedb',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': '',
+            'PORT': '',
+        }
+    }
+
 
 
 # Internationalization
