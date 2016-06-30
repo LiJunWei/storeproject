@@ -11,6 +11,18 @@ from django.db.models import F
 
 logger = logging.getLogger('store.views')
 
+def authenticated_view(function):
+  def wrap(request, *args, **kwargs):
+      if request.user.is_authenticated():
+          return function(request)
+      else:
+        login_form = LoginForm()
+        return render(request, 'login.html', locals())
+
+  wrap.__doc__=function.__doc__
+  wrap.__name__=function.__name__
+  return wrap
+
 def global_setting(request):
     #站点信息
     MEDIA_URL = settings.MEDIA_URL
@@ -144,53 +156,57 @@ def do_logout(request):
     return render(request, 'login.html', locals())
 
 #查看购物车
+@authenticated_view
 def view_cart(request):
-    if request.user.is_authenticated():
-        cart = request.session.get(request.user.id, None)
-        return render(request, 'checkout.html', locals())
-    else:
-        login_form = LoginForm()
-        return render(request, 'login.html', locals())
+    cart = request.session.get(request.user.id, None)
+    return render(request, 'checkout.html', locals())
 
 #添加购物车
+@authenticated_view
 def add_cart(request):
-    if request.user.is_authenticated():
+    try:
+        chid = request.POST.get('chid',None)
         try:
-            chid = request.POST.get('chid',None)
-            try:
-                clothing = Clothing.objects.get(pk=chid)
-            except Clothing.DoesNotExist:
-                return render(request, 'error.html', {'reason':'商品不存在'})
-            cart = request.session.get(request.user.id,None)
-            if not cart:
-                cart = Cart()
-                cart.add(clothing)
-                request.session[request.user.id] = cart
-            else:
-                cart.add(clothing)
-                request.session[request.user.id] = cart
-        except Exception as e:
-            logger.error(e)
-        return render(request, 'checkout.html', locals())
-    else:
-        login_form = LoginForm()
-        return render(request, 'login.html', locals())
+            clothing = Clothing.objects.get(pk=chid)
+        except Clothing.DoesNotExist:
+            return render(request, 'error.html', {'reason':'商品不存在'})
+        cart = request.session.get(request.user.id,None)
+        if not cart:
+            cart = Cart()
+            cart.add(clothing)
+            request.session[request.user.id] = cart
+        else:
+            cart.add(clothing)
+            request.session[request.user.id] = cart
+    except Exception as e:
+        logger.error(e)
+    return render(request, 'checkout.html', locals())
 
 #清空购物车
+@authenticated_view
 def cleanCart(request):
-    if request.user.is_authenticated():
-        cart = Cart()
-        request.session[request.user.id] = cart
-        return render(request, 'checkout.html', locals())
-    else:
-        login_form = LoginForm()
-        return render(request, 'login.html', locals())
+    cart = Cart()
+    request.session[request.user.id] = cart
+    return render(request, 'checkout.html', locals())
+
+@authenticated_view
+def clean_one_item(request, id):
+    item = None
+    try:
+     item = Clothing.objects.get(pk=id)
+    except Clothing.DoesNotExist:
+        pass
+    if item:
+        item.delete()
+    cart = request.session.get(request.user.id, None)
+    return render(request, 'checkout.html', {'cart':cart})
 
 #打折商品
 def getDiscount(request):
     try:
         clo_list = Clothing.objects.filter(new_price__lt=F('old_price'))
         clo_list = getPage(request,clo_list)
+        logger.debug("len clo_list:%d", len(clo_list))
         discount = True
     except Exception as e:
         logger.error(e)
